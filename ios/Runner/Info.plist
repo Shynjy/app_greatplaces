@@ -41,5 +41,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>O App precisa de acesso ao diretório interno.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>O App precisa de acesso à câmera.</string>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Compartilhar Localização para usar este recurso.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Compartilhar Localização para usar este recurso.</string>
 </dict>
 </plist>
