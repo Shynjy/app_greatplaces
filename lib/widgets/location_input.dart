@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
+// Tipo
+import '../models/place.dart';
+
+// Rotas
 import '../utils/location_util.dart';
+import '../screens/map_screen.dart';
+
+// Widgets
 import '../widgets/map_default.dart';
 
 class LocationInput extends StatefulWidget {
@@ -30,6 +37,22 @@ class _LocationInputState extends State<LocationInput> {
       // Ipa Google
       _previewImageUrl = staticMapImageUrl;
     });
+  }
+
+  Future<void> _selectOnMap() async {
+    final selectedLocation = await Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (ctx) => MapScreen(
+          initialLocation: PlaceLocation(
+            latitude: -23.5489,
+            longitude: -46.6388,
+          ),
+        ),
+      ),
+    );
+
+    if (selectedLocation == null) return;
   }
 
   @override
@@ -74,7 +97,7 @@ class _LocationInputState extends State<LocationInput> {
               label: Text('Selecione no Mapa'),
               icon: Icon(Icons.map),
               textColor: Theme.of(context).primaryColor,
-              onPressed: () {},
+              onPressed: _selectOnMap,
             ),
           ],
         )
