@@ -24,22 +24,37 @@ class _LocationInputState extends State<LocationInput> {
   double _latitude;
   double _longitude;
 
-  Future<void> _getCurrentUserLocation() async {
-    final locData = await Location().getLocation();
-
-    // Usando Ipa Google
+  void _showPreview(double lat, double lng) {
     final staticMapImageUrl = LocationUtil.generateLocationPreviewImage(
-      latitude: locData.latitude,
-      longitude: locData.longitude,
+      latitude: lat,
+      longitude: lng,
     );
 
     setState(() {
-      _latitude = locData.latitude.toDouble();
-      _longitude = locData.longitude.toDouble();
-
       // Ipa Google
       _previewImageUrl = staticMapImageUrl;
     });
+  }
+
+  Future<void> _getCurrentUserLocation() async {
+    try {
+      final locData = await Location().getLocation();
+
+      _showPreview(locData.latitude, locData.longitude);
+
+      setState(() {
+        _latitude = locData.latitude;
+        _longitude = locData.longitude;
+      });
+
+      widget.onSelectPosition(latlong.LatLng(
+        locData.latitude,
+        locData.longitude,
+      ));
+    } catch (e) {
+      // Colocar um caixa de dialogo, para caso o usuário não tenha permitido o uso da geolocalização.
+      return;
+    }
   }
 
   Future<void> _selectOnMap() async {
@@ -52,17 +67,11 @@ class _LocationInputState extends State<LocationInput> {
 
     if (selectedPosition == null) return;
 
-    final staticMapImageUrl = LocationUtil.generateLocationPreviewImage(
-      latitude: selectedPosition.latitude,
-      longitude: selectedPosition.longitude,
-    );
+    _showPreview(selectedPosition.latitude, selectedPosition.longitude);
 
     setState(() {
-      _latitude = selectedPosition.latitude.toDouble();
-      _longitude = selectedPosition.longitude.toDouble();
-      
-      // Ipa Google
-      _previewImageUrl = staticMapImageUrl;
+      _latitude = selectedPosition.latitude;
+      _longitude = selectedPosition.longitude;
     });
 
     widget.onSelectPosition(selectedPosition);

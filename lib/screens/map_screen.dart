@@ -33,12 +33,25 @@ class _MapScreenState extends State<MapScreen> {
   latlong.LatLng _picketPosition;
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.isReadonly) {
+      setState(() {
+        _picketPosition = widget.initialLocation.toLatLng();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Seleciona um local no map
     void _selectPosition(latlong.LatLng position) {
-      setState(() {
-        _picketPosition = position;
-      });
+      if (!widget.isReadonly) {
+        setState(() {
+          _picketPosition = position;
+        });
+      }
     }
 
     // Marcador
@@ -49,14 +62,18 @@ class _MapScreenState extends State<MapScreen> {
         point: _picketPosition,
         builder: (ctx) => Transform.translate(
           offset: Offset(0, -20),
-          child: Icon(Icons.location_on, size: 50, color: Colors.red,),
+          child: Icon(
+            Icons.location_on,
+            size: 50,
+            color: Colors.red,
+          ),
         ),
       ),
     ];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Selecione um local'),
+        title: widget.isReadonly ? Text('Local no map') : Text('Selecione um local'),
         actions: <Widget>[
           if (!widget.isReadonly)
             IconButton(

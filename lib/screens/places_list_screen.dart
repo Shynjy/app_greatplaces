@@ -49,7 +49,11 @@ class PlacesListScreen extends StatelessWidget {
                                   .location
                                   .address),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                  AppRoutes.PLACE_DETAIL,
+                                  arguments: greatPlaces.itemByIndex(index));
+                            },
                           );
                         },
                       ),

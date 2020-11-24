@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+// API GOOGLE
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
+
 import 'package:latlong/latlong.dart' as latlong;
+
 
 // Providers
 import '../providers/great_places.dart';
@@ -19,29 +22,37 @@ class PlaceFormScreen extends StatefulWidget {
 
 class _PlaceFormScreenState extends State<PlaceFormScreen> {
   final _titleController = TextEditingController();
+
+  // Local da imagem
   File _pickedImage;
+
+  // Posição geográfica
   latlong.LatLng _pickedPosition;
 
+  // Adiciona o local a variável
   void _selectImage(File pickedImage) {
     setState(() {
       _pickedImage = pickedImage;
     });
   }
 
+  // Adiciona a posição a variável
   void _selectPosition(latlong.LatLng position) {
     setState(() {
       _pickedPosition = position;
     });
   }
 
+  // Verifica se todos os campos estão preenchidos
   bool _isValidForm() {
     return _titleController.text.isNotEmpty &&
         _pickedImage != null &&
         _pickedPosition != null;
   }
 
+  // Adiciona ao sqflite as informações
   void _submitForm() {
-    // if (_isValidForm()) return;
+    if (!_isValidForm()) return;
 
     Provider.of<GreatPlaces>(context, listen: false).addPlace(
       _titleController.text,

@@ -8,6 +8,7 @@ import './utils/app_routes.dart';
 // Screens
 import './screens/places_list_screen.dart';
 import './screens/place_form_screen.dart';
+import './screens/place_detail_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         routes: {
           AppRoutes.PLACES_LIST: (ctx) => PlacesListScreen(),
           AppRoutes.PLACE_FORM: (ctx) => PlaceFormScreen(),
+          AppRoutes.PLACE_DETAIL: (ctx) => PlaceDetailScreen(),
         },
       ),
     );

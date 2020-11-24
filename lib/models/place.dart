@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:latlong/latlong.dart';
 
 // Tomar cuidado na hora da importação, para File interno tem que ser o :io
 import 'dart:io';
@@ -13,6 +14,10 @@ class PlaceLocation {
     @required this.longitude,
     this.address,
   });
+
+  LatLng toLatLng() {
+    return LatLng(this.latitude, this.longitude);
+  }
 }
 
 class Place {
