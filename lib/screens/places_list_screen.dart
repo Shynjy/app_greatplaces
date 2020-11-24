@@ -23,29 +23,37 @@ class PlacesListScreen extends StatelessWidget {
       ),
       body: FutureBuilder(
         future: Provider.of<GreatPlaces>(context, listen: false).loadPlaces(),
-        builder: (ctx, snapshot) => snapshot.connectionState == ConnectionState.waiting 
-        ? Center( child: CircularProgressIndicator(),)
-        : Consumer<GreatPlaces>(
-          child: Center(
-            child: Text('Nenhum local cadastrado!'),
-          ),
-          builder: (ctx, greatPlaces, ch) => greatPlaces.itemsCount == 0
-              ? ch
-              : ListView.builder(
-                  itemCount: greatPlaces.itemsCount,
-                  itemBuilder: (ctx, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: FileImage(
-                          greatPlaces.itemByIndex(index).image
-                        ),
-                      ),
-                      title: Text(greatPlaces.itemByIndex(index).title),
-                      onTap: () {},
-                    );
-                  },
+        builder: (ctx, snapshot) => snapshot.connectionState ==
+                ConnectionState.waiting
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Consumer<GreatPlaces>(
+                child: Center(
+                  child: Text('Nenhum local cadastrado!'),
                 ),
-        ),
+                builder: (ctx, greatPlaces, ch) => greatPlaces.itemsCount == 0
+                    ? ch
+                    : ListView.builder(
+                        itemCount: greatPlaces.itemsCount,
+                        itemBuilder: (ctx, index) {
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: FileImage(
+                                  greatPlaces.itemByIndex(index).image),
+                            ),
+                            title: Text(greatPlaces.itemByIndex(index).title),
+                            subtitle: FittedBox(
+                              child: Text(greatPlaces
+                                  .itemByIndex(index)
+                                  .location
+                                  .address),
+                            ),
+                            onTap: () {},
+                          );
+                        },
+                      ),
+              ),
       ),
     );
   }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-
-// Tipo
-import '../models/place.dart';
+import 'package:latlong/latlong.dart' as latlong;
 
 // Rotas
 import '../utils/location_util.dart';
@@ -12,6 +11,10 @@ import '../screens/map_screen.dart';
 import '../widgets/map_default.dart';
 
 class LocationInput extends StatefulWidget {
+  final Function onSelectPosition;
+
+  LocationInput(this.onSelectPosition);
+
   @override
   _LocationInputState createState() => _LocationInputState();
 }
@@ -40,19 +43,29 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   Future<void> _selectOnMap() async {
-    final selectedLocation = await Navigator.of(context).push(
+    final latlong.LatLng selectedPosition = await Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (ctx) => MapScreen(
-          initialLocation: PlaceLocation(
-            latitude: -23.5489,
-            longitude: -46.6388,
-          ),
-        ),
+        builder: (ctx) => MapScreen(),
       ),
     );
 
-    if (selectedLocation == null) return;
+    if (selectedPosition == null) return;
+
+    final staticMapImageUrl = LocationUtil.generateLocationPreviewImage(
+      latitude: selectedPosition.latitude,
+      longitude: selectedPosition.longitude,
+    );
+
+    setState(() {
+      _latitude = selectedPosition.latitude.toDouble();
+      _longitude = selectedPosition.longitude.toDouble();
+      
+      // Ipa Google
+      _previewImageUrl = staticMapImageUrl;
+    });
+
+    widget.onSelectPosition(selectedPosition);
   }
 
   @override

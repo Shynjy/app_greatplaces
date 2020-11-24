@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:latlong/latlong.dart' as latlong;
 
 // Providers
 import '../providers/great_places.dart';
@@ -18,18 +20,34 @@ class PlaceFormScreen extends StatefulWidget {
 class _PlaceFormScreenState extends State<PlaceFormScreen> {
   final _titleController = TextEditingController();
   File _pickedImage;
+  latlong.LatLng _pickedPosition;
 
   void _selectImage(File pickedImage) {
-    _pickedImage = pickedImage;
+    setState(() {
+      _pickedImage = pickedImage;
+    });
+  }
+
+  void _selectPosition(latlong.LatLng position) {
+    setState(() {
+      _pickedPosition = position;
+    });
+  }
+
+  bool _isValidForm() {
+    return _titleController.text.isNotEmpty &&
+        _pickedImage != null &&
+        _pickedPosition != null;
   }
 
   void _submitForm() {
-    if (_titleController.text.isEmpty || _pickedImage == null) {
-      return null;
-    }
+    // if (_isValidForm()) return;
 
-    Provider.of<GreatPlaces>(context, listen: false)
-        .addPlace(_titleController.text, _pickedImage);
+    Provider.of<GreatPlaces>(context, listen: false).addPlace(
+      _titleController.text,
+      _pickedImage,
+      _pickedPosition,
+    );
 
     Navigator.of(context).pop();
   }
@@ -43,31 +61,35 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    controller: _titleController,
-                    decoration: InputDecoration(labelText: 'Título'),
-                  ),
-                  SizedBox(height: 10),
-                  ImageInput(this._selectImage),
-                  SizedBox(height: 10),
-                  LocationInput(),
-                ],
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      controller: _titleController,
+                      decoration: InputDecoration(labelText: 'Título'),
+                      onChanged: (_) {
+                        setState(() {});
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    ImageInput(this._selectImage),
+                    SizedBox(height: 10),
+                    LocationInput(this._selectPosition),
+                  ],
+                ),
               ),
             ),
           ),
-          Spacer(),
           RaisedButton.icon(
             label: Text('Adicionar'),
             color: Theme.of(context).accentColor,
             icon: Icon(Icons.add),
             elevation: 0,
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            onPressed: _submitForm,
+            onPressed: _isValidForm() ? _submitForm : null,
           ),
         ],
       ),

@@ -6,7 +6,9 @@ import '../models/place.dart';
 
 // Dependência Flutter Map
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong/latlong.dart' as latlong;
+import '../plugin/zoombuttons_plugins_option.dart';
 
 // Chave MapBox
 import '../security/key_apis.dart';
@@ -15,15 +17,13 @@ class MapScreen extends StatefulWidget {
   final PlaceLocation initialLocation;
   final bool isReadonly;
 
-  //Erro na const
-  // const MapScreen({
-  //   this.initialLocation = const PlaceLocation(
-  //     latitude: -23.5489,
-  //     longitude: -46.6388,
-  //   ),
-  // });
-
-  const MapScreen({this.initialLocation, this.isReadonly = false});
+  MapScreen({
+    this.initialLocation = const PlaceLocation(
+      latitude: -23.5489,
+      longitude: -46.6388,
+    ),
+    this.isReadonly = false,
+  });
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -34,7 +34,6 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     // Seleciona um local no map
     void _selectPosition(latlong.LatLng position) {
       setState(() {
@@ -43,20 +42,32 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     // Marcador
-     var markers = <Marker>[
-        Marker(
-          width: 80.0,
-          height: 80.0,
-          point: _picketPosition,
-          builder: (ctx) => Container(
-            child: FlutterLogo(),
-          ),
+    var markers = <Marker>[
+      Marker(
+        width: 100.0,
+        height: 100.0,
+        point: _picketPosition,
+        builder: (ctx) => Transform.translate(
+          offset: Offset(0, -20),
+          child: Icon(Icons.location_on, size: 50, color: Colors.red,),
         ),
-      ];
+      ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Selecione um local'),
+        actions: <Widget>[
+          if (!widget.isReadonly)
+            IconButton(
+              icon: Icon(Icons.check),
+              onPressed: _picketPosition == null
+                  ? null
+                  : () {
+                      Navigator.of(context).pop(_picketPosition);
+                    },
+            ),
+        ],
       ),
       // IPA GOOGLE
       // body: GoogleMap(
@@ -82,7 +93,10 @@ class _MapScreenState extends State<MapScreen> {
             options: MapOptions(
               center: latlong.LatLng(widget.initialLocation.latitude,
                   widget.initialLocation.longitude),
-              zoom: 10.0,
+              zoom: 12.0,
+              plugins: [
+                ZoomButtonsPlugin(),
+              ],
               onTap: _selectPosition,
               // onTap: _handleTap,
             ),
@@ -95,7 +109,15 @@ class _MapScreenState extends State<MapScreen> {
                   'id': 'mapbox.mapbox-streets-v8',
                 },
               ),
-              MarkerLayerOptions(markers: _picketPosition != null ? markers : [])
+              MarkerLayerOptions(
+                  markers: _picketPosition != null ? markers : []),
+              ZoomButtonsPluginOption(
+                minZoom: 4,
+                maxZoom: 19,
+                mini: true,
+                padding: 10,
+                alignment: Alignment.bottomRight,
+              ),
             ],
           ),
         ],

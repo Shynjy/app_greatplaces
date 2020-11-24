@@ -37,13 +37,15 @@ class _MapDefaultState extends State<MapDefault> {
         MarkerLayerOptions(
           markers: [
             Marker(
+              width: 100.0,
+              height: 100.0,
               point: LatLng(widget.latitude, widget.longitude),
-              builder: (ctx) => Container(
-                margin: EdgeInsets.only(bottom: 60.0),
+              builder: (ctx) => Transform.translate(
+                offset: Offset(0, -20),
                 child: Icon(
                   Icons.location_on,
+                  size: 50,
                   color: Colors.red,
-                  size: 60.0,
                 ),
               ),
             ),
