@@ -15,16 +15,20 @@ class PlaceDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(place.title),
+        centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
           Container(
             height: 250,
             width: double.infinity,
-            child: Image.file(
-              place.image,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            child: Hero(
+              tag: place.id,
+              child: Image.file(
+                place.image,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Padding(

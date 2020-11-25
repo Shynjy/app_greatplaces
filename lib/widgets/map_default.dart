@@ -69,6 +69,7 @@ class _MapDefaultState extends State<MapDefault> {
           alignment: Alignment.topRight,
           child: IconButton(
             icon: Icon(Icons.my_location),
+            color: Theme.of(context).primaryColor,
             iconSize: 30,
             onPressed: () {
               mapController.move(

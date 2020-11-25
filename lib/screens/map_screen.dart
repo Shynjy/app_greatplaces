@@ -74,6 +74,7 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       appBar: AppBar(
         title: widget.isReadonly ? Text('Local no map') : Text('Selecione um local'),
+        centerTitle: true,
         actions: <Widget>[
           if (!widget.isReadonly)
             IconButton(
@@ -134,6 +135,10 @@ class _MapScreenState extends State<MapScreen> {
                 mini: true,
                 padding: 10,
                 alignment: Alignment.bottomRight,
+                zoomInIcon: Icons.add,
+                zoomOutIcon: Icons.remove,
+                zoomInColorIcon: Colors.white,
+                zoomOutColorIcon: Colors.white
               ),
             ],
           ),
